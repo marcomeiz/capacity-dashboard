@@ -1,35 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { DashboardLayout } from './components/templates/DashboardLayout';
+import { DateFilter } from './components/filters/DateFilter';
+import { CapacityGrid } from './components/grid/CapacityGrid';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+
+  const handleMonthChange = (date: Date) => {
+    setSelectedMonth(date);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <DashboardLayout>
+      <div className="space-y-4">
+        <DateFilter onMonthChange={handleMonthChange} />
+        <CapacityGrid selectedMonth={selectedMonth} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </DashboardLayout>
+  );
 }
 
-export default App
+export default App;
