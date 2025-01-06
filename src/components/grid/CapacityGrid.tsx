@@ -41,16 +41,41 @@ export function CapacityGrid({ selectedMonth }: CapacityGridProps) {
     loadData();
   }, [selectedMonth]);
 
+  
   const columnDefs: ColDef[] = [
     { field: 'full_name', headerName: 'Colaborador', sortable: true, filter: true },
     { field: 'working_days', headerName: 'Días Laborables', sortable: true },
     { field: 'absence_days', headerName: 'Días de Ausencia', sortable: true },
     { field: 'gross_hours', headerName: 'Horas Brutas', sortable: true, valueFormatter: params => params.value ? Number(params.value).toFixed(1) : '-' },
     { field: 'available_hours', headerName: 'Horas Disponibles', sortable: true, valueFormatter: params => params.value ? Number(params.value).toFixed(1) : '-' },
+    { field: 'estimated_hours', headerName: 'Horas Estimadas', sortable: true, valueFormatter: params => params.value ? Number(params.value).toFixed(1) : '-' },
     { field: 'charged_hours', headerName: 'Horas Cargadas', sortable: true, valueFormatter: params => params.value ? Number(params.value).toFixed(1) : '-' },
+    
+    // 🔹 NUEVA COLUMNA PARA HORAS ESTIMADAS
+    
+
     { field: 'actual_load_percentage', headerName: '% Carga Real', sortable: true, valueFormatter: params => `${Number(params.value).toFixed(1)}%` },
     { field: 'planned_load_percentage', headerName: '% Carga Planificada', sortable: true, valueFormatter: params => `${Number(params.value).toFixed(1)}%` },
-  ];
+];
+
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+  
+
+
+
+
+
+  
 
   if (error) {
     return <div className="text-red-500 p-4">❌ {error}</div>;

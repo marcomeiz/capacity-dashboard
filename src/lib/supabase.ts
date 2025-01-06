@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
+// 🔍 Verificamos que las variables de entorno estén bien cargadas
+console.log("🔍 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+console.log("🔍 Supabase Anon Key:", import.meta.env.VITE_SUPABASE_ANON_KEY);
+
+// 🚀 Creamos el cliente de Supabase
 export const supabase = createClient(
-  'https://hozjcowanpngcndykljj.supabase.co',
+  import.meta.env.VITE_SUPABASE_URL!,
   import.meta.env.VITE_SUPABASE_ANON_KEY!
 );
 
@@ -21,9 +26,8 @@ export interface CapacityData {
 }
 
 export async function fetchCapacityData(date: Date): Promise<CapacityData[]> {
-    const startOfMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`;
+  const startOfMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-01`;
 
-  
   console.log("🔍 Buscando datos en Supabase para:", startOfMonth);
 
   const { data, error } = await supabase

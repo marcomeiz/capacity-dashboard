@@ -26,11 +26,15 @@ export function CapacityDashboard() {
     }
   }, [tasks, absences, dateRange, tasksStatus, absencesStatus]);
 
+  // 🔹 Convertir a número y evitar NaN
+  const totalChargedHours = capacityData.reduce((sum, data) => sum + Number(data.charged_hours || 0), 0);
+  const totalAvailableHours = capacityData.reduce((sum, data) => sum + Number(data.available_hours || 0), 0);
+  const utilizationRate = totalAvailableHours > 0 ? (totalChargedHours / totalAvailableHours) * 100 : 0;
+
   const metrics = {
-    totalHours: capacityData.reduce((sum, data) => sum + data.chargedHours, 0),
-    availableHours: capacityData.reduce((sum, data) => sum + data.availableHours, 0),
-    utilizationRate: capacityData.reduce((sum, data) => sum + data.chargedHours, 0) / 
-                    capacityData.reduce((sum, data) => sum + data.availableHours, 0),
+    totalHours: totalChargedHours,
+    availableHours: totalAvailableHours,
+    utilizationRate,
     activeCollaborators: capacityData.length
   };
 
