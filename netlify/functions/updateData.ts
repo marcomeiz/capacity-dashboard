@@ -18,7 +18,7 @@ const refreshMaterializedViews = async () => {
   }
 };
 
-const updateHandler: Handler = async (event, context) => {
+const updateHandler: Handler = async () => {
   try {
     console.log('🔄 Iniciando actualización nocturna...');
     await migrateData();

@@ -27,8 +27,8 @@ export function CapacityDashboard() {
   }, [tasks, absences, dateRange, tasksStatus, absencesStatus]);
 
   // 🔹 Convertir a número y evitar NaN
-  const totalChargedHours = capacityData.reduce((sum, data) => sum + Number(data.charged_hours || 0), 0);
-  const totalAvailableHours = capacityData.reduce((sum, data) => sum + Number(data.available_hours || 0), 0);
+  const totalChargedHours = capacityData.reduce((sum, data) => sum + Number(data.chargedHours || 0), 0);
+  const totalAvailableHours = capacityData.reduce((sum, data) => sum + Number(data.availableHours || 0), 0);
   const utilizationRate = totalAvailableHours > 0 ? (totalChargedHours / totalAvailableHours) * 100 : 0;
 
   const metrics = {
@@ -45,7 +45,7 @@ export function CapacityDashboard() {
   return (
     <div className="p-4 space-y-4">
       <DateRangeFilter 
-        onRangeChange={(start, end) => setMonth(start)} 
+        onRangeChange={(start) => setMonth(start)} 
         defaultMonth={dateRange.startDate}
       />
       

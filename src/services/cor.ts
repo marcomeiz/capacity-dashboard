@@ -1,28 +1,5 @@
 import { config } from '../scripts/migrateConfig';
-
-interface CORTask {
-  id: number;
-  title: string;
-  project: {
-    name: string;
-    client: {
-      name: string;
-    }
-  };
-  status: string;
-  datetime: string;
-  deadline: string;
-  hour_charged: number;
-  estimated: number;
-  pm: {
-    first_name: string;
-    last_name: string;
-  };
-  collaborators: Array<{
-    first_name: string;
-    last_name: string;
-  }>;
-}
+import type { CORTask } from '../types/cor';
 
 export class CORService {
   private accessToken: string | null = null;
@@ -46,8 +23,14 @@ export class CORService {
     }
 
     const data = await response.json();
+    
+    if (!data.access_token) {
+      throw new Error('No access token received from COR API');
+    }
+
     this.accessToken = data.access_token;
-    return this.accessToken;
+    return data.access_token; // Devolvemos directamente data.access_token en lugar de this.accessToken
+
   }
 
   async getAllTasks(): Promise<CORTask[]> {

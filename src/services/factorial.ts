@@ -1,40 +1,10 @@
 import { config } from '../scripts/migrateConfig';
-
-interface FactorialEmployee {
-  id: number;
-  first_name: string;
-  last_name: string;
-  full_name: string;
-  preferred_name: string | null;
-  email: string;
-  birthday_on: string | null;
-  gender: string | null;
-  identifier: string | null;
-  identifier_type: string | null;
-  phone_number: string | null;
-  manager_id: number | null;
-  timeoff_manager_id: number | null;
-  active: boolean;
-}
-
-interface FactorialContract {
-  id: number;
-  employee_id: number;
-  salary_amount: number;
-  salary_frequency: string;
-  starts_on: string;
-  ends_on: string | null;
-  working_hours: number;
-  working_hours_frequency: string;
-}
-
-interface FactorialAbsence {
-  id: number;
-  employee_full_name: string;
-  start_on: string;
-  finish_on: string;
-  leave_type_id: number;
-}
+import type { 
+  FactorialEmployee, 
+  FactorialContract, 
+  FactorialAbsence,
+  FactorialLeaveType 
+} from '../types/factorial';
 
 export class FactorialService {
   private baseUrl = 'https://api.factorialhr.com/api/2025-01-01';
@@ -65,6 +35,10 @@ export class FactorialService {
 
   async getAbsences(): Promise<FactorialAbsence[]> {
     return this.request<FactorialAbsence[]>('/resources/timeoff/leaves');
+  }
+
+  async getLeaveTypes(): Promise<FactorialLeaveType[]> {
+    return this.request<FactorialLeaveType[]>('/resources/timeoff/leave_types');
   }
 }
 

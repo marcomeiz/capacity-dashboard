@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { calculateWorkingDays, calculateAvailableHours, processCapacityData } from '../capacityCalculations';
+import type { Task } from '../../types/cor';
+import type { RawAbsence } from '../../types/factorial';
 
 describe('calculateWorkingDays', () => {
   it('calculates working days correctly excluding weekends', () => {
