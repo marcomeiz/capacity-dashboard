@@ -1,22 +1,29 @@
-name: Actualizar datos y vistas materializadas
+name: Daily Data Update
 
 on:
   schedule:
-    - cron: '1 0 * * *'  # Ejecuta a las 00:01 UTC todos los días
-  workflow_dispatch:  # Permite ejecutar manualmente desde la interfaz de GitHub
+    - cron: '1 0 * * *'  # 00:01 cada día
+  workflow_dispatch:      # Permite ejecución manual
 
 jobs:
-  update:
+  update-data:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v3
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      - name: Instalar dependencias
-        run: npm install
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run update script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          COR_API_KEY: ${{ secrets.COR_API_KEY }}
+          COR_CLIENT_SECRET: ${{ secrets.COR_CLIENT_SECRET }}
+          FACTORIAL_API_KEY: ${{ secrets.FACTORIAL_API_KEY }}
+        run: node scripts/updateData.js
