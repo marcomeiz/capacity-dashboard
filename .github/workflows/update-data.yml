@@ -1,22 +1,43 @@
-name: Actualizar datos y vistas materializadas
+name: Daily Data Update
 
 on:
   schedule:
-    - cron: '1 0 * * *'  # Ejecuta a las 00:01 UTC todos los días
-  workflow_dispatch:  # Permite ejecutar manualmente desde la interfaz de GitHub
+    - cron: "0 0 * * *"  # Se ejecuta todos los días a las 00:00 (UTC)
+  workflow_dispatch:      # Permite lanzarlo manualmente desde GitHub
 
 jobs:
-  update:
+  update-data:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v3
+      # 1. Clona el repositorio
+      - uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v3
+      # 2. Configura Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Instalar dependencias
-        run: npm install
+      # 3. Instala dependencias (usa npm ci para instalaciones limpias)
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Ejecuta TU script de actualización
+      - name: Run update script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          COR_API_KEY: ${{ secrets.COR_API_KEY }}
+          COR_CLIENT_SECRET: ${{ secrets.COR_CLIENT_SECRET }}
+          FACTORIAL_API_KEY: ${{ secrets.FACTORIAL_API_KEY }}
+        run: |
+          # Aquí pones el comando que YA usabas localmente sin problemas,
+          # por ejemplo un script de package.json:
+          # npm run updateData
+          #
+          # O si prefieres llamar directamente a tu archivo .js/.ts (si te funcionaba):
+          # node dist/scripts/updateData.js
+          #
+          # Ajusta según lo que antes hacías y funcionaba.
+
+          npm run updateData
