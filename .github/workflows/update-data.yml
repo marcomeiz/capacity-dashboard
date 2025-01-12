@@ -2,8 +2,8 @@ name: Daily Data Update
 
 on:
   schedule:
-    - cron: "1 0 * * *"  # Todos los días a las 00:01 (UTC)
-  workflow_dispatch:
+    - cron: '1 0 * * *'  # Corre todos los días a las 00:01 (UTC)
+  workflow_dispatch:      # Permite ejecutar el workflow manualmente
 
 jobs:
   update-data:

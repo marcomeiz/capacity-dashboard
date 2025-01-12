@@ -1,15 +1,13 @@
 {
-    // Si quieres heredar algo de tu tsconfig principal, puedes usar "extends".
-    // "extends": "./tsconfig",
-  
     "compilerOptions": {
-      "module": "CommonJS",              // El más sencillo para Node
-      "target": "ES2020",                // O la versión que necesites
-      "outDir": "dist/scripts",          // Directorio de salida
-      "esModuleInterop": true            // Suele evitar errores de import
+      "module": "CommonJS",
+      "target": "ES2020",
+      "rootDir": "src",         // Carpeta base de tu código
+      "outDir": "dist",         // Donde se crearán los .js compilados
+      "esModuleInterop": true
     },
     "include": [
-      "src/scripts/**/*.ts"             // Ajusta la ruta según tu script
+      "src/scripts/**/*.ts"     // Ajusta si tu script está en otra ruta
     ]
   }
   
