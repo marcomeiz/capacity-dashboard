@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "migrate": "tsx src/scripts/migrateData.ts",
     "update-data": "tsx src/scripts/updateData.ts",
-    "updateData": "ts-node src/scripts/updateData.ts",
+    "build:scripts": "tsc -p tsconfig.scripts.json",
+    "updateData": "node dist/scripts/updateData.js",
     "test": "vitest"
   },
   "dependencies": {
