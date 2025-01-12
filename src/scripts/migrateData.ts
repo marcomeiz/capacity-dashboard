@@ -43,7 +43,7 @@ async function migrateData() {
 
     const contractsMap = new Map(contracts.map(contract => [contract.employee_id, contract]));
 
-    // Insertar empleados
+    // Insertar empleados normalizados
     const { error: employeesError } = await supabase.from('employees').upsert(
       await Promise.all(
         employees.map(async (employee) => {
@@ -60,7 +60,7 @@ async function migrateData() {
             factorial_id: employee.id,
             first_name: employee.first_name,
             last_name: employee.last_name,
-            full_name: normalizedFullName,
+            full_name: normalizedFullName, // Usamos `canonical_name`
             preferred_name: employee.preferred_name,
             email: employee.email,
             birthday_on: employee.birthday_on,
@@ -84,49 +84,6 @@ async function migrateData() {
 
     if (employeesError) throw employeesError;
     console.log(`✅ Importados ${employees.length} empleados con sus contratos`);
-
-    // Actualizar el estado de "operacionalidad" en la tabla employee_operational_status
-    console.log('🔄 Actualizando estado de operacionalidad...');
-    for (const employee of employees) {
-      const normalizedFullName = await getCanonicalName(employee.full_name, 'factorial');
-
-      // Verificar si el empleado ya existe en employee_operational_status
-      const { data: operationalStatus, error: fetchError } = await supabase
-        .from('employee_operational_status')
-        .select('is_operational')
-        .eq('employee_id', employee.id)
-        .maybeSingle();
-
-      if (fetchError) {
-        console.error(`⚠️ Error obteniendo estado de operacionalidad (${employee.id}):`, fetchError);
-      }
-
-      if (!operationalStatus) {
-        // Si no existe, insertar el registro con el nombre y el valor por defecto (true)
-        const { error: insertError } = await supabase
-          .from('employee_operational_status')
-          .insert([{ 
-            employee_id: employee.id, 
-            employee_name: normalizedFullName, 
-            is_operational: true 
-          }]);
-
-        if (insertError) {
-          console.error(`⚠️ Error insertando estado de operacionalidad (${employee.id}):`, insertError);
-        }
-      } else {
-        // Si existe, actualizar el nombre del empleado (por si cambió)
-        const { error: updateError } = await supabase
-          .from('employee_operational_status')
-          .update({ employee_name: normalizedFullName })
-          .eq('employee_id', employee.id);
-
-        if (updateError) {
-          console.error(`⚠️ Error actualizando nombre del empleado (${employee.id}):`, updateError);
-        }
-      }
-    }
-    console.log('✅ Estado de operacionalidad actualizado');
 
     // Importar ausencias desde Factorial
     console.log('📥 Importando ausencias de Factorial...');
@@ -186,28 +143,15 @@ async function migrateData() {
           if (!task.collaborators?.length) return [];
 
           return Promise.all(
-            task.collaborators.map(async (collab) => {
-              // Obtener el nombre completo directamente de COR
-              const collaboratorFullName = collab.first_name && collab.last_name 
-                ? `${collab.first_name} ${collab.last_name}`.trim()
-                : 'Unknown Collaborator';
-
-              // Obtener el nombre canónico
-              const canonicalName = await getCanonicalName(collaboratorFullName, 'cor');
-              
-        
-        
-        
-        
-        
-
-              return {
-                task_id: taskUUID,
-                collaborator_name: canonicalName,
-                hours_charged: (task.hour_charged || 0) / (task.collaborators?.length || 1),
-                hours_estimated: ((task.estimated || 0) / 60) / (task.collaborators?.length || 1),
-              };
-            })
+            task.collaborators.map(async (collab) => ({
+              task_id: taskUUID,
+              collaborator_name: await getCanonicalName(
+                `${collab.first_name || ''} ${collab.last_name || ''}`.trim() || 'Unknown Collaborator',
+                'cor'
+              ),
+              hours_charged: (task.hour_charged || 0) / (task.collaborators?.length || 1),
+              hours_estimated: ((task.estimated || 0) / 60) / (task.collaborators?.length || 1),
+            }))
           );
         })
       );
