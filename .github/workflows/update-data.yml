@@ -2,8 +2,8 @@ name: Daily Data Update
 
 on:
   schedule:
-    - cron: '1 0 * * *'  # 00:01 cada día
-  workflow_dispatch:      # Permite ejecución manual
+    - cron: '1 0 * * *'
+  workflow_dispatch:
 
 jobs:
   update-data:
@@ -26,6 +26,5 @@ jobs:
           COR_API_KEY: ${{ secrets.COR_API_KEY }}
           COR_CLIENT_SECRET: ${{ secrets.COR_CLIENT_SECRET }}
           FACTORIAL_API_KEY: ${{ secrets.FACTORIAL_API_KEY }}
-        run: 
-          npm install -g ts-node typescript
-          ts-node src/scripts/updateData.js
+        run: |
+          npx ts-node src/scripts/updateData.ts
