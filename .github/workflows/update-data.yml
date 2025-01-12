@@ -26,4 +26,4 @@ jobs:
           COR_API_KEY: ${{ secrets.COR_API_KEY }}
           COR_CLIENT_SECRET: ${{ secrets.COR_CLIENT_SECRET }}
           FACTORIAL_API_KEY: ${{ secrets.FACTORIAL_API_KEY }}
-        run: node src/scripts/updateData.js
+        run: ts-node src/scripts/updateData.js
